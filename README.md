@@ -1,4 +1,4 @@
-# sanji-validator[![Build Status](https://travis-ci.org/kmsheng/sanji-validator.svg?branch=master)](https://travis-ci.org/kmsheng/sanji-validator)
+# sanji-validator [![Build Status](https://travis-ci.org/kmsheng/sanji-validator.svg?branch=master)](https://travis-ci.org/kmsheng/sanji-validator)
 
 AngularJS form validation
 
