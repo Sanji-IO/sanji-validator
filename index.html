@@ -4,23 +4,36 @@
   <meta charset="UTF-8">
   <title></title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-  <style type="text/css">
+  <style>
     .container {
-      padding: 80px 0;
+      padding: 20px 0;
     }
     .validation-invalid {
       color: #f00;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .form-box {
+      border: 1px solid #ccc;
+      padding: 16px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body ng-app="demoApp">
 
   <div class="container">
-    <div class="row">
-      <h1>Demo</h1>
+    <h1>Sanji Validator Demo</h1>
 
-      <div class="col-sm-3">
-        <div ng-controller="WatchFormCtrl" ng-submit="submit()">
+    <div class="row">
+
+      <div class="col-sm-6">
+        <div ng-controller="WatchFormCtrl" class="form-box" ng-submit="submit()">
           <h2>Watch Method</h2>
           <form role="form" name="form" class="form-horizontal">
 
@@ -48,39 +61,10 @@
         </div>
       </div>
 
-      <div class="col-sm-3">
-        <div ng-controller="BlurFormCtrl" >
+      <div class="col-sm-6">
+        <div ng-controller="BlurFormCtrl" class="form-box">
           <h2>Blur Method</h2>
           <form role="form" name="form" class="form-horizontal" sanji-validator-method="blur" sanji-validator-submit ng-submit="submit()">
-
-            <div class="form-group">
-              <label for="email" class="col-sm-2 control-label">Email</label>
-              <div class="col-sm-10">
-                <input class="form-control" placeholder="email" type="text" ng-model="user.email" name="email" sanji-validator="email,required" />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="email" class="col-sm-2 control-label">Range</label>
-              <div class="col-sm-10">
-                <input class="form-control" type="text" ng-model="user.range" minlength="5" maxlength="10" placeholder="5 ~ 10 length" name="range" sanji-validator="range,required" />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
-              </div>
-            </div>
-
-          </form>
-        </div>
-      </div>
-
-      <div class="col-sm-3">
-        <div ng-controller="SubmitFormCtrl" >
-          <h2>Submit Method</h2>
-          <form role="form" name="form" class="form-horizontal" sanji-validator-method="submit" sanji-validator-submit ng-submit="submit()">
 
             <div class="form-group">
               <label for="email" class="col-sm-2 control-label">Email</label>
@@ -109,9 +93,39 @@
     </div><!-- .row -->
 
     <div class="row">
-      <div class="col-sm-3">
-        <div ng-controller="InvalidCbFormCtrl">
-          <h2>Callback with disabled error message</h2>
+
+      <div class="col-sm-6">
+        <div ng-controller="SubmitFormCtrl" class="form-box">
+          <h2>Submit Method</h2>
+          <form role="form" name="form" class="form-horizontal" sanji-validator-method="submit" sanji-validator-submit ng-submit="submit()">
+
+            <div class="form-group">
+              <label for="email" class="col-sm-2 control-label">Email</label>
+              <div class="col-sm-10">
+                <input class="form-control" placeholder="email" type="text" ng-model="user.email" name="email" sanji-validator="email,required" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="col-sm-2 control-label">Range</label>
+              <div class="col-sm-10">
+                <input class="form-control" type="text" ng-model="user.range" minlength="5" maxlength="10" placeholder="5 ~ 10 length" name="range" sanji-validator="range,required" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div ng-controller="InvalidCbFormCtrl" class="form-box">
+          <h2>Invalid callback with error message disabled</h2>
           <form role="form" name="form" class="form-horizontal" sanji-validator-no-error-msg sanji-validator-method="blur" sanji-validator-submit ng-submit="submit()">
 
             <div class="form-group">
@@ -137,7 +151,8 @@
           </form>
         </div>
       </div>
-    </div>
+
+    </div><!-- .row -->
   </div><!-- .container -->
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
