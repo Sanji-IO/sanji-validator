@@ -1,0 +1,18 @@
+{
+  "name": "sanji-validator",
+  "version": "1.0.0",
+  "homepage": "https://github.com/MOXA-WEB/sanji-validator",
+  "authors": [
+    "kmsheng <kmsh3ng@gmail.com>"
+  ],
+  "description": "AngularJS Form Validation",
+  "main": "dist/sanji-validator.js",
+  "keywords": [
+    "angular-validation",
+    "sanji-validator"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "angular-mocks": "~1.2.22"
+  }
+}
