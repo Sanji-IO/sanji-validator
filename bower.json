@@ -14,5 +14,10 @@
   "license": "MIT",
   "devDependencies": {
     "angular-mocks": "~1.2.22"
+  },
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "angular": "~1.2.23",
+    "angular-mocks": "~1.2.23"
   }
 }
