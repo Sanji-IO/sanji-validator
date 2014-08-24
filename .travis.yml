@@ -5,6 +5,7 @@ node_js:
 
 before_script:
   - npm install gulp
+  - ./scripts/travis/wait_for_browser_provider.sh
 
 script:
   - ./scripts/travis/build.sh
