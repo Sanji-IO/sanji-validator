@@ -9,7 +9,7 @@ var wiredep = require('wiredep');
 gulp.task('test', function() {
 
   var bowerDeps = wiredep({
-    directory: 'bower_components',
+    directory: 'lib',
     dependencies: true,
     devDependencies: true
   });
