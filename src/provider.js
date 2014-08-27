@@ -124,8 +124,6 @@
 
       form.hasSetFocus = false;
 
-      var index = 0;
-
       for (var k in form) {
         if (form[k] && form[k].hasOwnProperty('$dirty')) {
           scope.$broadcast(k + '::sanji-submit');
