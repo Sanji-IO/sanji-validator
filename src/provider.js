@@ -80,6 +80,7 @@
 
       scope.value = value;
 
+      // lodash each doesn't guarantee order of properties
       _.each(attrs, function(value, property) {
         // skip value
         if ('value' === property) {
