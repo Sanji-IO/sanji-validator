@@ -219,9 +219,10 @@
      */
     self.runReservedRule = function(rule, value, attrs) {
 
-      var args, scope;
+      var args, scope, values;
 
       scope = {};
+      values = [];
       args = self.extractVarFromFunc(rule);
 
       scope.value = value;
@@ -236,7 +237,12 @@
         }
       });
 
-      return rule.apply(this, _.pluck(scope));
+      // put values in correct order
+      _.each(args, function(arg) {
+        values.push(scope[arg]);
+      });
+
+      return rule.apply(this, values);
     };
 
     /**
