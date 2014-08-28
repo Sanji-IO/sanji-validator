@@ -2,14 +2,157 @@
 (function() {
   'use strict';
 
+  // lodash is going to be used.
   angular.module('sanji.validator.value', [])
-  .value('_', window._);
+  .value('_', window._)
+  .value('sanjiDefaultValidators', {
+
+    email: {
+      rule: /^[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
+      error: "INVALID_EMAIL_FORMAT"
+    },
+
+    password: {
+      rule: /^(?=.*\d)(?=.*[a-zA-Z]).{6,100}$/,
+      error: "INVALID_PASSWORD_FORMAT"
+    },
+
+    range: {
+      rule: function(value, minlength, maxlength) {
+        var length = value.length;
+        minlength = +minlength;
+        maxlength = +maxlength;
+        return (minlength <= length) && (length <= maxlength);
+      },
+      error: "The value should be in range ({{minlength}} ~ {{maxlength}})"
+    },
+
+    community: {
+      rule: /^\.{1,100}$/,
+      error: "INVALID_COMMUNITY_FORMAT",
+      scope: {
+        minlength: 1,
+        maxlength: 100
+      }
+    },
+
+    required: {
+      error: "THIS_FIELD_IS_REQUIRED"
+    },
+
+    ip: {
+      rule: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+      error: "INVALID_IP_FORMAT"
+    },
+
+    dial: {
+      rule: /^([0-9#\*]{1,})$/,
+      error: "INVALID_DIAL_NUMBER"
+    },
+
+    number: {
+      rule: /^\s*\d+\s*$/,
+      error: "INVALID_NUMBER"
+    },
+
+    port: {
+      rule: /^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/,
+      error: "INVALID_PORT"
+    },
+
+    ipsecAuthKey: {
+      rule: /[\d]{16}/,
+      error: "The key length must equal to 16 characters."
+    },
+
+    ipsecEncryptKey: {
+      rule: /[\d]{24}/,
+      error: "The key length must equal to 24 characters."
+    },
+
+    mac: {
+      rule: /^([0-9A-F]{2}[:]){5}([0-9A-F]{2})$/,
+      error: "This isn't mac address."
+    },
+
+    percentage: {
+      rule: /(^(100(?:\.0{1,2})?))|(?!^0*$)(?!^0*\.0*$)^\d{1,2}(\.\d{1,2})?$/,
+      error: "The range is 1 - 100 and can't be empty"
+    },
+
+    weight: {
+      rule: /^(10|[1-9]?)$/,
+      error: "The range is 1 - 10 and can't be empty"
+    },
+
+    floatNum: {
+      rule: /[-+]?(\d*[.])?\d+/,
+      error: "This isn't float number and can't be empty"
+    },
+
+    passwordLen: {
+      rule: /^\w{5,}$/,
+      error: "The password is at least 5 length."
+    },
+
+    // This is for update account password.
+    trackerTimeInterval: {
+      rule: function(value) {
+        return ((0 < value) && (value <= 120));
+      },
+      error: "The range is 1 - 120 and can't be empty."
+    },
+
+    // This is for update account password.
+    confirmPassword: {
+      rule: function(value, scope) {
+        return (value === scope.$parent.account.newPwd);
+      },
+      error: "Confirm error."
+    },
+
+    wifiWepKeyFormat: {
+      rule: function(value) {
+
+        var pattern = '^[0-9a-zA-Z]{5}$|' +
+          '^[0-9a-zA-Z]{13}$|' +
+          '^[0-9a-zA-Z]{16}$|' +
+          '^[0-9a-zA-Z]{29}$|' +
+          '^[0-9a-fA-F]{10}$|' +
+          '^[0-9a-fA-F]{26}$|' +
+          '^[0-9a-fA-F]{32}$|' +
+          '^[0-9a-fA-F]{58}$';
+
+        return new RegExp(pattern).test(value);
+      },
+      error: "The HEX key length must be 10, 26, 32 or 58 and ASCII key length must be 5, 13, 16 or 29."
+    },
+
+    wifiPskFormat: {
+      rule: function(value) {
+        return /^[0-9a-zA-Z]{8,62}$|^[0-9a-fA-F]{64}$/.test(value);
+      },
+      error: "The HEX key length must be 64 and ASCII key length must be 8 - 63."
+    },
+
+    wifiRadiusKeyFormat: {
+      rule: function(value) {
+        return /^[0-9a-zA-Z]{8,31}$/.test(value);
+      },
+      error: "The ASCII key length must be 8 - 31."
+    }
+
+  });
 })();
 
 /*globals angular*/
 (function() {
   'use strict';
 
+  /**
+   * Provider to store validator config and
+   * provide validator related functions.
+   */
   angular.module('sanji.validator.provider', ['sanji.validator.value'])
   .provider('sanjiValidatorConfig', function() {
 
@@ -21,18 +164,36 @@
     config.validators = {};
     config.validMethod = 'watch';
 
+    /**
+     * Setup the injections.
+     *
+     * @param {Object} injector angular $injector.
+     */
     setup = function (injector) {
       $injector = injector;
       $q = $injector.get('$q');
       $timeout = $injector.get('$timeout');
       $rootScope = $injector.get('$rootScope');
       _ = $injector.get('_');
+      config.validators = $injector.get('sanjiDefaultValidators');
     };
 
+    /**
+     * Check if the validator is reserved.
+     *
+     * @param {boolean} is reserved or not.
+     */
     self.isReservedRule = function(name) {
       return -1 !== ['range'].indexOf(name);
     };
 
+    /**
+     * Extrac function arguments from function string.
+     *
+     * @example
+     * sanjiValidatorConfig.extractVarFromFunc(function(first, second, third) {});
+     * @param {Array} An array consisting of function arguments.
+     */
     self.extractVarFromFunc = function(func) {
 
       var FN_ARGS, args;
@@ -49,6 +210,13 @@
       return args;
     };
 
+    /**
+     * Execute the reserved rule.
+     *
+     * @param {(RegExp|function)} rule Validation function.
+     * @param {string} value The value to be checked.
+     * @param {Array} attrs An array of attributes from directive link function.
+     */
     self.runReservedRule = function(rule, value, attrs) {
 
       var args, scope;
@@ -71,23 +239,49 @@
       return rule.apply(this, _.pluck(scope));
     };
 
+    /**
+     * Set validation method.
+     *
+     * @param {string} method The method to be set. Can be submit, blur or watch.
+     */
     self.setValidMethod = function(method) {
       config.validMethod = method;
     };
 
+    /**
+     * Get validation method.
+     *
+     * @return {string} Method name.
+     */
     self.getValidMethod = function() {
       return config.validMethod;
     };
 
+    /**
+     * Set Validators.
+     *
+     * @param {object} rows The validation rules.
+     */
     self.setValidators = function(rows) {
       angular.extend(config.validators, rows);
       $rootScope.$broadcast('sanji::validators::change');
     };
 
+    /**
+     * Get Validators.
+     *
+     * @return {Object} Validators.
+     */
     self.getValidators = function() {
       return config.validators;
     };
 
+    /**
+     * Get multiple validators by validators' names.
+     *
+     * @param {Array} names Validators' names.
+     * @return {Array} An Array of Validators.
+     */
     self.getValidatorsByNames = function(names) {
 
       var allValidators, validators;
@@ -99,9 +293,11 @@
 
         var validator;
 
+        // handle spaces. e.g. ['ip', 'required']
         name = name.replace(/^\s+|\s+$/g, '');
         validator = allValidators[name];
 
+        // throw error to developer if given validator name is not set.
         if (! validator) {
           throw new Error('validator ' + name + ' not found.');
         }
@@ -112,27 +308,57 @@
       return validators;
     };
 
-    self.setCustomErrorHtml = function(html) {
-      config.customCustomErrorHtml = html;
+    /**
+     * Set customized error HTML.
+     * Angular expression is also available.
+     *
+     * @example
+     * sanjiValidatorConfig.setCustomErrorHtml('<p class="validation-invalid">{{errorMessage | translate}}</p>');
+     *
+     * @param {string} HTML HTML template.
+     */
+    self.setCustomErrorHtml = function(HTML) {
+      config.customCustomErrorHtml = HTML;
     };
 
+    /**
+     * Get customized error HTML.
+     *
+     * @return {(string|undefined)} Saved HTML template.
+     */
     self.getCustomErrorHtml = function() {
       return config.customCustomErrorHtml;
     };
 
+    /**
+     * Get default error HTML,
+     *
+     * @param {string} message The message to be embeded.
+     * @return {string} Default error HTML.
+     */
     self.getErrorHtml = function(message) {
       return '<p class="validation-invalid">' + message + '</p>';
     };
 
+    /**
+     * Verify if the given object is RegExp.
+     *
+     * @param {Object} obj The RegExp object to be verified.
+     * @return {boolean} Is RegExp or not.
+     */
     self.isRegExp = function(obj) {
       return (RegExp === obj.constructor);
     };
 
+    /**
+     * Send events to validate the fields of given form controller.
+     *
+     * @param {Object} form The angular form controller.
+     * @return {promise} promise object of angular $q implementation.
+     */
     self.validate = function(scope, form) {
 
       form.hasSetFocus = false;
-
-      var index = 0;
 
       for (var k in form) {
         if (form[k] && form[k].hasOwnProperty('$dirty')) {
@@ -153,6 +379,13 @@
       return deferred.promise;
     };
 
+    /**
+     * Whether the global validator method setting is blur.
+     * If ctrl param is provided then it will check the ctrl's setting instead.
+     *
+     * @param {(Object|undefined)} ctrl The controller object.
+     * @return {boolean} Use blur method or not.
+     */
     self.useBlur = function(ctrl) {
       if (ctrl && angular.isDefined(ctrl.validatorMethod)) {
         return ('blur' === ctrl.validatorMethod);
@@ -160,6 +393,13 @@
       return ('blur' === self.getValidMethod());
     };
 
+    /**
+     * Whether the global validator method setting is submit.
+     * If ctrl param is provided then it will check the ctrl's setting instead.
+     *
+     * @param {(Object|undefined)} ctrl The controller object.
+     * @return {boolean} Use submit method or not.
+     */
     self.useSubmit = function(ctrl) {
       if (ctrl && angular.isDefined(ctrl.validatorMethod)) {
         return ('submit' === ctrl.validatorMethod);
@@ -191,15 +431,21 @@
   });
 })();
 
+/*globals angular*/
 (function() {
   'use strict';
-
+  /**
+   * Put this on your form tag if you want
+   * to validate before ngSubmit
+   *
+   * @example <form name="form" ng-submit="submit()" sanji-validator-submit>
+   */
   angular.module('sanji.validator.directive', ['sanji.validator.provider'])
   .directive('sanjiValidatorSubmit', ["sanjiValidatorConfig", function(sanjiValidatorConfig) {
     return {
       priority: -1,    // before ngSubmit
       restrict: 'A',
-      require: ['form', '?sanjiValidatorMethod'],
+      require: ['form', '?sanjiValidatorMethod'],    // Also allow sanjiValidatorMethodCtrl to be required.
       link: function(scope, element, attrs, ctrls) {
 
         var formCtrl, sanjiValidatorMethodCtrl;
@@ -209,6 +455,7 @@
 
         element.on('submit', function(event) {
 
+          // only validate for submit and blur method.
           if (sanjiValidatorConfig.useBlur(sanjiValidatorMethodCtrl) || sanjiValidatorConfig.useSubmit(sanjiValidatorMethodCtrl)) {
 
             event.stopImmediatePropagation();
@@ -223,6 +470,10 @@
     };
   }])
   .directive('sanjiValidatorNoErrorMsg', function() {
+    /**
+     * Disable a form's error message.
+     * @example <form name="form" ng-submit="submit()" sanji-validator-no-error-msg>
+     */
     return {
       restrict: 'A',
       require: 'form',
@@ -231,6 +482,10 @@
     };
   })
   .directive('sanjiValidatorMethod', function() {
+    /**
+     * Set a form's validator method.
+     * @example <form name="form" ng-submit="submit()" sanji-validator-method>
+     */
     return {
       restrict: 'A',
       require: 'form',
@@ -244,10 +499,27 @@
   })
   .directive('sanjiValidator', ["sanjiValidatorConfig", "$interpolate", "$compile", "_", "$timeout", function(sanjiValidatorConfig, $interpolate, $compile, _, $timeout) {
 
+    /**
+     * The sanji validator directive.
+     * @example <input type="text" name="username" ng-model="user.name" sanji-validator="username,required" />
+     */
+
     var validate, setHtml, runCallback, newScope, oldScopes;
 
     oldScopes = {};
 
+    /**
+     * Internal validate function of sanjiValidator directive.
+     *
+     * @private
+     * @param {string} value The value to be validated.
+     * @param {Array} validators List of validators.
+     * @param {Object} ngModelCtrl
+     * @param {Array} attrs
+     * @return {Object} Object with properties error and errorValidator
+     *         error {boolean} Has error or not.
+     *         errorValidator {object} Validator object.
+     */
     validate = function(value, validators, ngModelCtrl, attrs) {
 
       var error, errorValidator;
@@ -259,7 +531,7 @@
         var rule, hasValue;
 
         rule = validator.rule;
-        hasValue = !! value;
+        hasValue = !! value;    // convert to boolean
 
         if ('required' === validator.name) {
           error = ! (hasValue);
@@ -292,6 +564,15 @@
       };
     };
 
+    /**
+     * Set message to field.
+     *
+     * @private
+     * @param {Object} element Element from directive link function.
+     * @param {Object} ret The returned object of validate function.
+     * @param {Array} attrs Attrs from directive link function.
+     * @param {Object} options Object that has properties beforeElementSelector or scope.
+     */
     setHtml = function(element, ret, attrs, options) {
 
       if (angular.isString(options.beforeElementSelector)) {
@@ -321,6 +602,8 @@
           oldScopes[key] = newScope;
           newScope.errorMessage = errorMessage;
 
+          // Handle something like angular translate <p class="error">errorMessage | translate</p>
+          // This make the template active with scope.
           $timeout(function() {
 
             element.next()
@@ -335,6 +618,14 @@
       return element.next().html('');
     };
 
+    /**
+     * Run valid callback or invalid callback.
+     *
+     * @private
+     * @param {boolean} error Has error or not.
+     * @param {Object} errorValidator Validator that has error.
+     * @param {Object} scope Directive scope.
+     */
     runCallback = function(error, errorValidator, scope) {
       if (error) {
         scope.invalidCallback({errorValidator: errorValidator});
@@ -354,6 +645,7 @@
       },
       link: function(scope, element, attrs, ctrls) {
 
+        // if beforeElementSelector is set, put span tag close to it.
         if (angular.isString(scope.beforeElementSelector)) {
           element.closest(scope.beforeElementSelector).after('<span></span>');
         } else {
@@ -376,10 +668,12 @@
         options.beforeElementSelector = scope.beforeElementSelector;
         options.scope = scope;
 
+        // dynamically change the validator list.
         scope.$on('sanji::validators::change', function() {
           validators = sanjiValidatorConfig.getValidatorsByNames(validatorNames);
         });
 
+        // handle submit for provider's validate function
         scope.$on(ngModelCtrl.$name + '::sanji-submit', function() {
           var ret = validate(element[0].value, validators, ngModelCtrl, attrs);
 
@@ -441,6 +735,7 @@
 (function() {
   'use strict';
 
+  // include the modules all together
   angular.module('sanji.validator', [
     'sanji.validator.value',
     'sanji.validator.provider',
