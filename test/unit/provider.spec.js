@@ -38,9 +38,9 @@ describe('sanjiValidatorConfig', function(){
     });
 
     var result = validatorConfig.getValidators();
-    expect(result).toEqual({required: {
+    expect(result.required).toEqual({
         error: "This field is required. Don't leave it empty."
-    }});
+    });
   });
 
   it('should have range as the only reserved rule now', function() {
