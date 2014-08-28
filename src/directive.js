@@ -1,13 +1,18 @@
 /*globals angular*/
 (function() {
   'use strict';
-
+  /**
+   * Put this on your form tag if you want
+   * to validate before ngSubmit
+   *
+   * @example <form name="form" ng-submit="submit()" sanji-validator-submit>
+   */
   angular.module('sanji.validator.directive', ['sanji.validator.provider'])
   .directive('sanjiValidatorSubmit', function(sanjiValidatorConfig) {
     return {
       priority: -1,    // before ngSubmit
       restrict: 'A',
-      require: ['form', '?sanjiValidatorMethod'],
+      require: ['form', '?sanjiValidatorMethod'],    // Also allow sanjiValidatorMethodCtrl to be required.
       link: function(scope, element, attrs, ctrls) {
 
         var formCtrl, sanjiValidatorMethodCtrl;
@@ -17,6 +22,7 @@
 
         element.on('submit', function(event) {
 
+          // only validate for submit and blur method.
           if (sanjiValidatorConfig.useBlur(sanjiValidatorMethodCtrl) || sanjiValidatorConfig.useSubmit(sanjiValidatorMethodCtrl)) {
 
             event.stopImmediatePropagation();
@@ -31,6 +37,10 @@
     };
   })
   .directive('sanjiValidatorNoErrorMsg', function() {
+    /**
+     * Disable a form's error message.
+     * @example <form name="form" ng-submit="submit()" sanji-validator-no-error-msg>
+     */
     return {
       restrict: 'A',
       require: 'form',
@@ -39,6 +49,10 @@
     };
   })
   .directive('sanjiValidatorMethod', function() {
+    /**
+     * Set a form's validator method.
+     * @example <form name="form" ng-submit="submit()" sanji-validator-method>
+     */
     return {
       restrict: 'A',
       require: 'form',
@@ -52,10 +66,27 @@
   })
   .directive('sanjiValidator', function(sanjiValidatorConfig, $interpolate, $compile, _, $timeout) {
 
+    /**
+     * The sanji validator directive.
+     * @example <input type="text" name="username" ng-model="user.name" sanji-validator="username,required" />
+     */
+
     var validate, setHtml, runCallback, newScope, oldScopes;
 
     oldScopes = {};
 
+    /**
+     * Internal validate function of sanjiValidator directive.
+     *
+     * @private
+     * @param {string} value The value to be validated.
+     * @param {Array} validators List of validators.
+     * @param {Object} ngModelCtrl
+     * @param {Array} attrs
+     * @return {Object} Object with properties error and errorValidator
+     *         error {boolean} Has error or not.
+     *         errorValidator {object} Validator object.
+     */
     validate = function(value, validators, ngModelCtrl, attrs) {
 
       var error, errorValidator;
@@ -67,7 +98,7 @@
         var rule, hasValue;
 
         rule = validator.rule;
-        hasValue = !! value;
+        hasValue = !! value;    // convert to boolean
 
         if ('required' === validator.name) {
           error = ! (hasValue);
@@ -100,6 +131,15 @@
       };
     };
 
+    /**
+     * Set message to field.
+     *
+     * @private
+     * @param {Object} element Element from directive link function.
+     * @param {Object} ret The returned object of validate function.
+     * @param {Array} attrs Attrs from directive link function.
+     * @param {Object} options Object that has properties beforeElementSelector or scope.
+     */
     setHtml = function(element, ret, attrs, options) {
 
       if (angular.isString(options.beforeElementSelector)) {
@@ -129,6 +169,8 @@
           oldScopes[key] = newScope;
           newScope.errorMessage = errorMessage;
 
+          // Handle something like angular translate <p class="error">errorMessage | translate</p>
+          // This make the template active with scope.
           $timeout(function() {
 
             element.next()
@@ -143,6 +185,14 @@
       return element.next().html('');
     };
 
+    /**
+     * Run valid callback or invalid callback.
+     *
+     * @private
+     * @param {boolean} error Has error or not.
+     * @param {Object} errorValidator Validator that has error.
+     * @param {Object} scope Directive scope.
+     */
     runCallback = function(error, errorValidator, scope) {
       if (error) {
         scope.invalidCallback({errorValidator: errorValidator});
@@ -162,6 +212,7 @@
       },
       link: function(scope, element, attrs, ctrls) {
 
+        // if beforeElementSelector is set, put span tag close to it.
         if (angular.isString(scope.beforeElementSelector)) {
           element.closest(scope.beforeElementSelector).after('<span></span>');
         } else {
@@ -184,10 +235,12 @@
         options.beforeElementSelector = scope.beforeElementSelector;
         options.scope = scope;
 
+        // dynamically change the validator list.
         scope.$on('sanji::validators::change', function() {
           validators = sanjiValidatorConfig.getValidatorsByNames(validatorNames);
         });
 
+        // handle submit for provider's validate function
         scope.$on(ngModelCtrl.$name + '::sanji-submit', function() {
           var ret = validate(element[0].value, validators, ngModelCtrl, attrs);
 
