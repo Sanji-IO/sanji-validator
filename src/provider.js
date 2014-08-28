@@ -28,6 +28,7 @@
       $timeout = $injector.get('$timeout');
       $rootScope = $injector.get('$rootScope');
       _ = $injector.get('_');
+      config.validators = $injector.get('sanjiDefaultValidators');
     };
 
     /**
