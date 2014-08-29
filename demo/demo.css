@@ -1,0 +1,18 @@
+.container {
+  padding: 20px 0;
+}
+.validation-invalid {
+  color: #f00;
+}
+h1 {
+  margin-bottom: 20px;
+}
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.form-box {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 20px;
+}
