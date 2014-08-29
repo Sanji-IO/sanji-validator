@@ -9,12 +9,12 @@
 
     email: {
       rule: /^[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*$/i,
-      error: "INVALID_EMAIL_FORMAT"
+      error: "Invalid email format."
     },
 
     password: {
       rule: /^(?=.*\d)(?=.*[a-zA-Z]).{6,100}$/,
-      error: "INVALID_PASSWORD_FORMAT"
+      error: "Invalid password format. Password must include at least on letter, one numeric digit and must be at least 6 characters, no more than 100 characters."
     },
 
     range: {
@@ -24,12 +24,12 @@
         maxlength = +maxlength;
         return (minlength <= length) && (length <= maxlength);
       },
-      error: "The value should be in range ({{minlength}} ~ {{maxlength}})"
+      error: "The value should be in range ({{minlength}} ~ {{maxlength}})."
     },
 
     community: {
       rule: /^\.{1,100}$/,
-      error: "INVALID_COMMUNITY_FORMAT",
+      error: "Invalid community format.",
       scope: {
         minlength: 1,
         maxlength: 100
@@ -37,27 +37,27 @@
     },
 
     required: {
-      error: "THIS_FIELD_IS_REQUIRED"
+      error: "This field is required."
     },
 
     ip: {
       rule: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-      error: "INVALID_IP_FORMAT"
+      error: "Invalid IP format."
     },
 
     dial: {
       rule: /^([0-9#\*]{1,})$/,
-      error: "INVALID_DIAL_NUMBER"
+      error: "Invalid dial number format."
     },
 
     number: {
       rule: /^\s*\d+\s*$/,
-      error: "INVALID_NUMBER"
+      error: "Invalid number format."
     },
 
     port: {
       rule: /^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/,
-      error: "INVALID_PORT"
+      error: "Invalid port format."
     },
 
     ipsecAuthKey: {
@@ -77,17 +77,17 @@
 
     percentage: {
       rule: /(^(100(?:\.0{1,2})?))|(?!^0*$)(?!^0*\.0*$)^\d{1,2}(\.\d{1,2})?$/,
-      error: "The range is 1 - 100 and can't be empty"
+      error: "The range of percentage is 1 - 100 and can't be empty."
     },
 
     weight: {
       rule: /^(10|[1-9]?)$/,
-      error: "The range is 1 - 10 and can't be empty"
+      error: "The range of weight is 1 - 10 and can't be empty."
     },
 
     floatNum: {
       rule: /[-+]?(\d*[.])?\d+/,
-      error: "This isn't float number and can't be empty"
+      error: "This isn't float number and can't be empty."
     },
 
     passwordLen: {
