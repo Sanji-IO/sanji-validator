@@ -11,6 +11,15 @@
     "angular-validation",
     "sanji-validator"
   ],
+  "ignore": [
+    "demo",
+    "src",
+    "index.html",
+    "scripts",
+    "test",
+    "gulp",
+    "gulpfile.js"
+  ],
   "license": "MIT",
   "devDependencies": {
     "angular-mocks": "~1.2.22"
