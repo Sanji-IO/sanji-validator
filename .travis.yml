@@ -16,4 +16,6 @@ notifications:
   email:
     - kmsh3ng@gmail.com
 
-  slack: sys:yeTvjm0bw1tX6MBWrfkVL5RG
+  slack:
+    rooms:
+      - sys:yeTvjm0bw1tX6MBWrfkVL5RG#travis
