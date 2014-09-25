@@ -1,4 +1,4 @@
-# sanji-validator [![Build Status](https://travis-ci.org/Sanji-IO/sanji-validator.svg?branch=master)](https://travis-ci.org/MOXA-WEB/sanji-validator)
+# sanji-validator [![Build Status](https://travis-ci.org/Sanji-IO/sanji-validator.svg?branch=master)](https://travis-ci.org/Sanji-IO/sanji-validator)
 
 AngularJS form validation
 
