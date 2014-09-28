@@ -3,7 +3,7 @@
 AngularJS form validation
 
 # Demo
-[http://moxa-web.github.io/sanji-validator](http://moxa-web.github.io/sanji-validator)
+[http://sanji-io.github.io/sanji-validator](http://sanji-io.github.io/sanji-validator)
 
 #Table of contents
 
