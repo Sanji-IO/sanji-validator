@@ -4,6 +4,7 @@ node_js:
   - "0.10"
 
 before_script:
+  - "mkdir ~/.npm"
   - npm install gulp
   - ./scripts/travis/wait_for_browser_provider.sh
 
