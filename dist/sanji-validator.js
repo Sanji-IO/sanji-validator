@@ -484,8 +484,8 @@
     return {
       restrict: 'A',
       require: 'form',
-      controller: ["$scope", function($scope) {
-      }]
+      controller: function() {
+      }
     };
   })
   .directive('sanjiValidatorMethod', function() {
@@ -684,7 +684,7 @@
         scope.$on(ngModelCtrl.$name + '::sanji-submit', function() {
           var ret = validate(element[0].value, validators, ngModelCtrl, attrs);
 
-          if (! angular.isDefined(sanjiValidatorNoErrorMsgCtrl)) {
+          if (! angular.isDefined(sanjiValidatorNoErrorMsgCtrl) || null === sanjiValidatorNoErrorMsgCtrl) {
             setHtml(element, ret, attrs, options);
           }
           runCallback(ret.error, ret.errorValidator, scope);
@@ -704,7 +704,7 @@
             scope.$apply(function() {
               var ret = validate(element[0].value, validators, ngModelCtrl, attrs);
 
-              if (! angular.isDefined(sanjiValidatorNoErrorMsgCtrl)) {
+              if (! angular.isDefined(sanjiValidatorNoErrorMsgCtrl) || null === sanjiValidatorNoErrorMsgCtrl) {
                 setHtml(element, ret, attrs, options);
               }
               runCallback(ret.error, ret.errorValidator, scope);
@@ -726,7 +726,7 @@
 
           var ret = validate(value, validators, ngModelCtrl, attrs);
 
-          if (! angular.isDefined(sanjiValidatorNoErrorMsgCtrl)) {
+          if (! angular.isDefined(sanjiValidatorNoErrorMsgCtrl) || null === sanjiValidatorNoErrorMsgCtrl) {
             setHtml(element, ret, attrs, options);
           }
           runCallback(ret.error, ret.errorValidator, scope);
