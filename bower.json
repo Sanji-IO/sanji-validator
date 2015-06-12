@@ -1,6 +1,6 @@
 {
   "name": "sanji-validator",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "homepage": "https://github.com/MOXA-WEB/sanji-validator",
   "authors": [
     "kmsheng <kmsh3ng@gmail.com>"
@@ -23,10 +23,10 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "angular-mocks": "~1.3.11"
+    "angular-mocks": "~1.4.0"
   },
   "dependencies": {
-    "lodash": "~3.0.0",
-    "angular": "~1.3.11"
+    "lodash": "~3.8.0",
+    "angular": "~1.4.0"
   }
 }
