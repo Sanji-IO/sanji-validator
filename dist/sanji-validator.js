@@ -453,6 +453,11 @@
       priority: -1,    // before ngSubmit
       restrict: 'A',
       require: ['form', '?sanjiValidatorMethod'],    // Also allow sanjiValidatorMethodCtrl to be required.
+      controller: ['$scope', function($scope) {
+        this.getScope = function() {
+          return $scope;
+        };
+      }],
       link: function(scope, element, attrs, ctrls) {
 
         var formCtrl, sanjiValidatorMethodCtrl;
@@ -472,6 +477,26 @@
                 scope.$eval(attrs.ngSubmit);
               });
           }
+        });
+      }
+    };
+  }])
+  .directive('sanjiCheckFormValid', ["sanjiValidatorConfig", function(sanjiValidatorConfig) {
+    return {
+      restrict: 'A',
+      require: ['^form', '^sanjiValidatorSubmit'],
+      link: function(scope, element, attrs, ctrls) {
+
+        var formCtrl, parentCtrl;
+
+        formCtrl = ctrls[0];
+        parentCtrl = ctrls[1];
+
+        element.on('click', function() {
+          sanjiValidatorConfig.validate(parentCtrl.getScope(), formCtrl)
+            .then(function() {
+              scope.$eval(attrs.sanjiCheckFormValid);
+            });
         });
       }
     };
