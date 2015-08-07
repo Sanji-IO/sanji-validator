@@ -1,6 +1,6 @@
 {
-  "name": "mx-validator",
-  "version": "0.0.0",
+  "name": "sanji-validator",
+  "version": "1.0.6",
   "description": "AngularJS form validation",
   "main": "gulpfile.js",
   "dependencies": {
@@ -24,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MOXA-WEB/mx-validator.git"
+    "url": "https://github.com/MOXA-WEB/sanji-validator.git"
   },
   "author": "kmsheng",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MOXA-WEB/mx-validator/issues"
+    "url": "https://github.com/MOXA-WEB/sanji-validator/issues"
   },
-  "homepage": "https://github.com/MOXA-WEB/mx-validator"
+  "homepage": "https://github.com/MOXA-WEB/sanji-validator"
 }
