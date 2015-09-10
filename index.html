@@ -33,6 +33,13 @@
             </div>
 
             <div class="form-group">
+              <label for="greater" class="col-sm-2 control-label">Greater</label>
+              <div class="col-sm-10">
+                <input class="form-control" type="text" ng-model="user.greater" greater="1000" name="greater" sanji-validator="greater,required" />
+              </div>
+            </div>
+
+            <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Submit</button>
               </div>

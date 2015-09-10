@@ -37,7 +37,7 @@
      * @param {boolean} is reserved or not.
      */
     self.isReservedRule = function(name) {
-      return -1 !== ['range'].indexOf(name);
+      return -1 !== ['range', 'greater'].indexOf(name);
     };
 
     /**

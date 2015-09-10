@@ -17,6 +17,15 @@
       error: "Invalid password format. Password must include at least on letter, one numeric digit and must be at least 6 characters, no more than 100 characters."
     },
 
+    greater: {
+      rule: function(value, greater) {
+        value = +value;
+        greater = +greater;
+        return greater <= value ? true : false;
+      },
+      error: "The value should be greater than {{greater}}."
+    },
+
     range: {
       rule: function(value, minlength, maxlength) {
         var length = value.length;
