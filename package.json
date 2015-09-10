@@ -1,10 +1,9 @@
 {
   "name": "sanji-validator",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "AngularJS form validation",
   "main": "gulpfile.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "gulp-concat": "~2.3.4",
     "gulp-ng-annotate": "~0.5.2",
