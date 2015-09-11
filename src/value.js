@@ -23,7 +23,7 @@
         greater = +greater;
         return greater <= value ? true : false;
       },
-      error: "The value should be greater than {{greater}}."
+      error: "The value should be greater or equal {{greater}}."
     },
 
     range: {
